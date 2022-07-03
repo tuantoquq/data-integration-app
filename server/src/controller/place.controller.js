@@ -46,3 +46,19 @@ export const getPlaceById = async (req, res) => {
         });
     }
 }
+
+export const getAllPlaceType = async (req, res) => {
+    try{
+        let listType = await PlaceService.getAllPlaceType();
+        return res.status(httpStatus.OK).send({
+            status: apiStatus.SUCCESS,
+            message: "get list place type successfully",
+            data: listType
+        });
+    }catch(err){
+        return res.status(httpStatus.INTERNAL_SERVER_ERROR).send({
+            status: apiStatus.OTHER_ERROR,
+            message: err.message,
+        });
+    }
+}

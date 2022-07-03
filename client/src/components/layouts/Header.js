@@ -1,14 +1,29 @@
-import { Button } from '@material-ui/core';
-import styles from './CSS/Header.module.css';
+import { Box, Card, CardContent, InputAdornment, SvgIcon, TextField } from "@material-ui/core";
+import SearchIcon from '@mui/icons-material/Search'
 function Header() {
-    return (
-        <div className={styles.container}>
-            <div className={styles.headers}>
-                <Button variant='contained' color='primary'>Địa điểm</Button>
-                <Button variant='contained' color='default'>Khoảng cách</Button>
-            </div>
-        </div>
-    );
+  return (
+    <Card>
+      <CardContent>
+        <Box sx={{ maxWidth: 100 , maxHeight: 50}}>
+          <TextField
+            // value={searchCustomer}
+            // onChange={handleChangeSearchCustomer}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SvgIcon color="action" fontSize="small">
+                    <SearchIcon />
+                  </SvgIcon>
+                </InputAdornment>
+              ),
+            }}
+            placeholder="Search places..."
+            variant="outlined"
+          />
+        </Box>
+      </CardContent>
+    </Card>
+  );
 }
 
 export default Header;

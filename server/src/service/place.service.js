@@ -17,7 +17,12 @@ PlaceService.getPlaceById = async (placeId) => {
             `Did not find place with id: ${placeId}`
         );
     }
+    
     return place;
 }
 
+PlaceService.getAllPlaceType = async () => {
+    let placeType = await Place.find().select({place_type: 1}).distinct('place_type');
+    return placeType;
+}
 export default PlaceService;

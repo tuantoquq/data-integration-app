@@ -1,6 +1,6 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
-const SchoolSchema = new mongoose.Schema(
+const BusStopSchema = new mongoose.Schema(
     {
         id: {
             type: String,
@@ -14,23 +14,19 @@ const SchoolSchema = new mongoose.Schema(
             type: Number,
             required: true
         },
-        head_name: {
+        stop_type: {
             type: String
         },
-        telephone: {
+        street: {
             type: String
         },
-        website: {
-            type: String
-        },
-        postcode: {
+        locality: {
             type: String
         }
-    },
-    {
+    },{
         versionKey: false
     }
 );
 
-const School = mongoose.model('School', SchoolSchema, 'School');
-export default School;
+const BusStop = mongoose.model('BusStop', BusStopSchema, 'BusStop');
+export default BusStop;

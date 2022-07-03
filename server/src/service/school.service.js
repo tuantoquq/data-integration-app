@@ -10,7 +10,7 @@ SchoolService.findAllSchool = async () => {
 }
 
 SchoolService.getSchoolById = async (schoolId) => {
-    let school = await School.findById(schoolId);
+    let school = await School.findOne({id: schoolId});
     if(!school){
         throw new CustomError(
             httpStatus.INTERNAL_SERVER_ERROR,
