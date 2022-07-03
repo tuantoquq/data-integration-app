@@ -1,4 +1,8 @@
 ## Data Integration App
 ### Scripts
-    Step1: yarn 
-    Step2: yarn start
+    1. Start server:
+        yarn
+        yarn dev / yarn start
+    2. Start client:
+        yarn 
+        yarn start
