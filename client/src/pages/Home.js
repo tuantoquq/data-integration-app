@@ -1,30 +1,151 @@
-import { Grid } from "@material-ui/core";
+import {
+  FormControl,
+  Grid,
+  IconButton,
+  InputAdornment,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
+} from "@mui/material";
 import { useJsApiLoader } from "@react-google-maps/api";
-import MapsComponent from "../components/home/MapsComponent";
-import Header from "../components/layouts/Header";
-import SideBar from "../components/layouts/SideBar";
+import { useEffect, useState } from "react";
+import MapsComponent from "../components/MapsComponent";
+import SearchIcon from "@mui/icons-material/Search";
+import { listRadius } from "../mock/SampleData";
 import { MAP_API_KEY } from "../constants/Constants";
+import { getAllPlace, getAllPlaceByFilter, getListPlaceType, searchPlace } from "../service/PlaceService";
 export default function Home() {
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: MAP_API_KEY,
   });
+  const [placeType, setPlaceType] = useState("");
+  const [radius, setRadius] = useState("");
+  const [markers, setMarkers] = useState([]);
+  const [listType, setListType] = useState([]);
+  const [keyword, setKeyword] = useState();
+  useEffect(() => {
+    getAllPlace()
+      .then((res) => {
+        setMarkers(res?.data?.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    getListPlaceType().then((res) => {
+      let selects = res?.data?.data;
+      selects.push("All Type");
+      setListType(selects);
+    });
+  }, []);
+  const currentPosition = {longitude: -1.89601, latitude: 53.75541}
+  useEffect(() => {
+    getAllPlaceByFilter(placeType, radius, currentPosition, keyword).then(res => {
+      setMarkers(res?.data?.data);
+    }).catch((err) => {
+      console.log(err);
+    });
+  }, [placeType, radius])
+  const handleSearch = () => {
+    getListPlaceType().then((res) => {
+      let selects = res?.data?.data;
+      selects.push("All Type");
+      setListType(selects);
+    }); 
+    searchPlace(keyword).then(res => {
+      setMarkers(res?.data?.data);
+      setPlaceType("All Type");
+      setRadius(-1);
+    }).catch((err) => {
+      console.log(err);
+    })
+  };
 
   return (
-    <div style={{ margin: 0, padding: 0 }}>
-      <Grid container>
-        <Grid item xs={3}>
-          <SideBar />
-        </Grid>
-        <Grid item xs={9}>
-          <Grid item xs={12}>
-            <Header />
-          </Grid>
-          <Grid item xs={12} style={{margin: '2px 2px 2px 2px'}}>
-            {isLoaded ? <MapsComponent /> : <>Loading...</>}
+    <Grid container>
+      <Grid item xs={2}>
+        <Grid component="main">
+          <Grid
+            container
+            spacing={4}
+            sx={{ justifyContent: "flex-start", pt: "10px", px: 1.5 }}
+          >
+            <Grid item xs={12}>
+              <TextField
+                value={keyword}
+                onChange={(e) => setKeyword(e.target.value)}
+                placeholder="Search ..."
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="start">
+                      <IconButton onClick={handleSearch}>
+                        <SearchIcon />
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+                sx={{
+                  "& .MuiOutlinedInput-notchedOutline": {
+                    borderRadius: "15px",
+                  },
+                }}
+              />
+            </Grid>
+            <Grid item xs={8}>
+              <FormControl fullWidth>
+                <InputLabel>Place Type</InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  value={placeType}
+                  label="PlaceType"
+                  onChange={(e) => {
+                    setPlaceType(e.target.value);
+                  }}
+                  placeholder="PlaceType"
+                >
+                  {listType.map((item, id) => {
+                    return (
+                      <MenuItem key={id} value={item}>
+                        {item}
+                      </MenuItem>
+                    );
+                  })}
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={8}>
+              <FormControl fullWidth>
+                <InputLabel>Radius</InputLabel>
+                <Select
+                  labelId="radius-select-label"
+                  id="radius-select"
+                  value={radius}
+                  label="Radius"
+                  onChange={(e) => {
+                    setRadius(e.target.value);
+                  }}
+                  placeholder="Radius"
+                >
+                  {listRadius.map((item, id) => {
+                    return (
+                      <MenuItem key={id} value={item.value}>
+                        {item.radius}
+                      </MenuItem>
+                    );
+                  })}
+                </Select>
+              </FormControl>
+            </Grid>
           </Grid>
         </Grid>
       </Grid>
-    </div>
+      <Grid item xs={10}>
+        <Grid item xs={12}>
+          {isLoaded ? <MapsComponent markers={markers} /> : <>Loading...</>}
+        </Grid>
+      </Grid>
+    </Grid>
   );
 }

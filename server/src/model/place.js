@@ -31,6 +31,9 @@ const PlaceSchema = new mongoose.Schema(
         place_type: {
             type: String
         },
+        name: {
+            type: String,
+        },
         metadata: {
             type: String
         }

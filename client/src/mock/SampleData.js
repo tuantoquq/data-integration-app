@@ -20,3 +20,31 @@ export const markerData = [
         position: { lat: 40.712776, lng: -74.005974 }
       }
 ];
+
+export const listRadius = [
+  {
+    id: 1,
+    radius: "5 KM",
+    value: 5
+  },
+  {
+    id: 2,
+    radius: "10 KM",
+    value: 10
+  },
+  {
+    id: 3,
+    radius: "20 KM",
+    value: 20
+  },
+  {
+    id: 4,
+    radius: "50 KM",
+    value: 50
+  },
+  {
+    id: 5,
+    radius: "None",
+    value: -1
+  },
+];

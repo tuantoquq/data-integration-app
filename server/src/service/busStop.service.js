@@ -14,3 +14,6 @@ BusStopService.getBusStopByPlaceId = async (placeId) => {
     }
     return bus;
 }
+
+
+export default BusStopService;
