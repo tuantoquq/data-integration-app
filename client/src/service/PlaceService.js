@@ -61,3 +61,13 @@ export const searchPlace = async (keyword) => {
     }
     return response;
 }
+
+export const getDetailPlace = async (placeId) => {
+  let response;
+  try{
+    response = await api.get(`/places?placeId=${placeId}`);
+  }catch(err){
+    console.log(err);
+  }
+  return response;
+}

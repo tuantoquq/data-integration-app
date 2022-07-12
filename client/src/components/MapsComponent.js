@@ -6,6 +6,9 @@ import {
 import { useState, memo } from "react";
 import { INIT_MAP_POSITION } from "../constants/Constants";
 import PlaceCard from "./CardInformation";
+import { connect, useDispatch, useSelector } from "react-redux";
+import { GET_LOCATE } from "../store/actions/Actions";
+import { getDetailPlace } from "../service/PlaceService";
 
 const containerStyle = {
   width: "83vw",
@@ -13,8 +16,12 @@ const containerStyle = {
 };
 
 function MapsComponent({markers}) {
-  
+  const dispatch = useDispatch(); 
   const [activeMaker, setActiveMaker] = useState(null);
+  const currentPickLocation = useSelector(state => state.pickLocate);
+  const [detailPlace, setDetailPlace] = useState();
+
+  console.log("crr: ", currentPickLocation);
 
   const handleOnload = (map) => {
     const bounds = new window.google.maps.LatLngBounds(
@@ -29,12 +36,17 @@ function MapsComponent({markers}) {
     if (maker === activeMaker) {
       return;
     }
-    setActiveMaker(maker);
+    getDetailPlace(maker).then(res => {
+      setDetailPlace(res?.data?.data);
+      setActiveMaker(maker);
+    })
   };
 
   const handleClick = (ev) => {
     console.log(ev.latLng.lat());
     console.log(ev.latLng.lng());
+    const position = {longitude: ev.latLng.lng(), latitude: ev.latLng.lat()}
+    dispatch({type: GET_LOCATE, payload: position});
   }
 
   return (
@@ -42,7 +54,7 @@ function MapsComponent({markers}) {
       mapContainerStyle={containerStyle}
       onLoad={handleOnload}
       zoom={INIT_MAP_POSITION.zoom}
-      onClick={handleClick}
+      onRightClick={handleClick}
     >
       {markers.map((item) => {
         return (
@@ -52,8 +64,8 @@ function MapsComponent({markers}) {
             onClick={() => handlerActiveMaker(item.id)}
           >
             {activeMaker === item.id ? (
-              <InfoWindow onCloseClick={() => setActiveMaker(null)}>
-                <PlaceCard name={item.name} address={item.address} place_type={item.place_type}/>
+              <InfoWindow onCloseClick={() => setActiveMaker("")}>
+                <PlaceCard place={detailPlace}/>
               </InfoWindow>
             ) : null}
           </Marker>
@@ -63,4 +75,4 @@ function MapsComponent({markers}) {
   );
 }
 
-export default memo(MapsComponent);
+export default connect(null, null)(memo(MapsComponent));

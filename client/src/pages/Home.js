@@ -15,16 +15,20 @@ import SearchIcon from "@mui/icons-material/Search";
 import { listRadius } from "../mock/SampleData";
 import { MAP_API_KEY } from "../constants/Constants";
 import { getAllPlace, getAllPlaceByFilter, getListPlaceType, searchPlace } from "../service/PlaceService";
+import { useSelector } from "react-redux";
+
 export default function Home() {
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: MAP_API_KEY,
   });
-  const [placeType, setPlaceType] = useState("");
-  const [radius, setRadius] = useState("");
+  const [placeType, setPlaceType] = useState("All Type");
+  const [radius, setRadius] = useState(-1);
   const [markers, setMarkers] = useState([]);
   const [listType, setListType] = useState([]);
   const [keyword, setKeyword] = useState();
+  // const currentLocation = useSelector(state => state.pickLocate);
+
   useEffect(() => {
     getAllPlace()
       .then((res) => {
@@ -39,20 +43,15 @@ export default function Home() {
       setListType(selects);
     });
   }, []);
-  const currentPosition = {longitude: -1.89601, latitude: 53.75541}
+  let currentPickLocation = {longitude: -1.89601, latitude: 53.75541}
   useEffect(() => {
-    getAllPlaceByFilter(placeType, radius, currentPosition, keyword).then(res => {
+    getAllPlaceByFilter(placeType, radius, currentPickLocation).then(res => {
       setMarkers(res?.data?.data);
     }).catch((err) => {
       console.log(err);
     });
   }, [placeType, radius])
   const handleSearch = () => {
-    getListPlaceType().then((res) => {
-      let selects = res?.data?.data;
-      selects.push("All Type");
-      setListType(selects);
-    }); 
     searchPlace(keyword).then(res => {
       setMarkers(res?.data?.data);
       setPlaceType("All Type");

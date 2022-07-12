@@ -34,8 +34,14 @@ PlaceService.getAllPlaceWithFilter = async (placeType) => {
 };
 
 PlaceService.search = async (keyword) => {
-    let places = await Place.find({$or: [{name: {$regex: new RegExp(`.*${keyword}.*`), $options: "i"}}
+    console.log(keyword);
+    let places;
+    if(keyword === undefined || keyword === ""){
+        places = await Place.find();
+    }else{
+        places = await Place.find({$or: [{name: {$regex: new RegExp(`.*${keyword}.*`), $options: "i"}}
                     , {address: {$regex: new RegExp(`.*${keyword}.*`), $options: "i"}}]});
+    }
     return places
 }
 

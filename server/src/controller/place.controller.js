@@ -45,13 +45,12 @@ export const getPlaceById = async (req, res) => {
                 message: "Place type of Place is invalid!"
             });
         }
+        place = place.toObject();
+        place.detail = detail;
         return res.status(httpStatus.OK).send({
             status: apiStatus.SUCCESS,
             message: `get place by id ${placeId} successfully`,
-            data: {
-                place: place,
-                detail: detail
-            }
+            data: place
         });
     }catch(err){
         if (err instanceof CustomError) {
