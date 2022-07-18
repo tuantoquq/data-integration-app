@@ -71,3 +71,14 @@ export const getDetailPlace = async (placeId) => {
   }
   return response;
 }
+export const updateCurrentPossion = async (lng, lat) => {
+  let response;
+  try{
+    response = await api.post("/places/update-current", {
+      lng, lat
+    });
+  }catch(err){
+    console.log(err);
+  }
+  return response;
+}

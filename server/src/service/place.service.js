@@ -44,5 +44,12 @@ PlaceService.search = async (keyword) => {
     }
     return places
 }
-
+PlaceService.updateCurrentPossion = async (lng, lat) => {
+    const id = "current-position";
+    let place = await Place.findOneAndUpdate({id: id}, {
+        longitude: lng, 
+        latitude: lat
+    }, {new: true});
+    return place;
+}
 export default PlaceService;

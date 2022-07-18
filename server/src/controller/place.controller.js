@@ -32,6 +32,7 @@ export const getPlaceById = async (req, res) => {
     try{
         let placeId = req.query.placeId;
         let place = await PlaceService.getPlaceById(placeId);
+        console.log(place);
         let detail;
         if(place.place_type === PlaceType.School){
             detail = await SchoolService.getSchoolById(placeId);
@@ -122,6 +123,23 @@ export const search = async (req, res) => {
         return res.status(httpStatus.OK).send({
             status: apiStatus.SUCCESS,
             message: "search successfully",
+            data: places
+        });
+    }catch(err){
+        return res.status(httpStatus.INTERNAL_SERVER_ERROR).send({
+            status: apiStatus.OTHER_ERROR,
+            message: err.message,
+        }); 
+    }
+}
+export const updateCurrentPossion = async(req, res) => {
+    try{
+        let lng = req.body.lng;
+        let lat = req.body.lat;
+        let places = await PlaceService.updateCurrentPossion(lng, lat);
+        return res.status(httpStatus.OK).send({
+            status: apiStatus.SUCCESS,
+            message: "update current possition successfully successfully",
             data: places
         });
     }catch(err){

@@ -15,7 +15,6 @@ import SearchIcon from "@mui/icons-material/Search";
 import { listRadius } from "../mock/SampleData";
 import { MAP_API_KEY } from "../constants/Constants";
 import { getAllPlace, getAllPlaceByFilter, getListPlaceType, searchPlace } from "../service/PlaceService";
-import { useSelector } from "react-redux";
 
 export default function Home() {
   const { isLoaded } = useJsApiLoader({
@@ -27,7 +26,6 @@ export default function Home() {
   const [markers, setMarkers] = useState([]);
   const [listType, setListType] = useState([]);
   const [keyword, setKeyword] = useState();
-  // const currentLocation = useSelector(state => state.pickLocate);
 
   useEffect(() => {
     getAllPlace()
@@ -39,6 +37,7 @@ export default function Home() {
       });
     getListPlaceType().then((res) => {
       let selects = res?.data?.data;
+      selects = selects.filter(item => item !== "Current");
       selects.push("All Type");
       setListType(selects);
     });
