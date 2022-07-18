@@ -15,6 +15,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import { listRadius } from "../mock/SampleData";
 import { MAP_API_KEY } from "../constants/Constants";
 import { getAllPlace, getAllPlaceByFilter, getListPlaceType, searchPlace } from "../service/PlaceService";
+import { useSelector } from "react-redux";
 
 export default function Home() {
   const { isLoaded } = useJsApiLoader({
@@ -26,6 +27,7 @@ export default function Home() {
   const [markers, setMarkers] = useState([]);
   const [listType, setListType] = useState([]);
   const [keyword, setKeyword] = useState();
+  const currentPickLocation = useSelector(state => state.pickLocate);
 
   useEffect(() => {
     getAllPlace()
@@ -42,19 +44,17 @@ export default function Home() {
       setListType(selects);
     });
   }, []);
-  let currentPickLocation = {longitude: -1.89601, latitude: 53.75541}
+  
   useEffect(() => {
     getAllPlaceByFilter(placeType, radius, currentPickLocation).then(res => {
       setMarkers(res?.data?.data);
     }).catch((err) => {
       console.log(err);
     });
-  }, [placeType, radius])
+  }, [placeType, radius, currentPickLocation])
   const handleSearch = () => {
     searchPlace(keyword).then(res => {
       setMarkers(res?.data?.data);
-      setPlaceType("All Type");
-      setRadius(-1);
     }).catch((err) => {
       console.log(err);
     })
@@ -135,6 +135,9 @@ export default function Home() {
                   })}
                 </Select>
               </FormControl>
+            </Grid>
+            <Grid  item xs={12}>
+              <p>With option radius, you can right click on map to choose you current location!</p>
             </Grid>
           </Grid>
         </Grid>
