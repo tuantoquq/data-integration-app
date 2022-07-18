@@ -103,6 +103,8 @@ export const getAllPlaceWithFilter = async (req, res) => {
             }
                
         }
+        let current = await PlaceService.getCurrentPosition();
+        response.push(current);
         return res.status(httpStatus.OK).send({
             status: apiStatus.SUCCESS,
             message: "get places with filter successfully",
@@ -120,6 +122,8 @@ export const search = async (req, res) => {
     try{
         let keyword = req.query.q;
         let places = await PlaceService.search(keyword);
+        let current = await PlaceService.getCurrentPosition();
+        places.push(current);
         return res.status(httpStatus.OK).send({
             status: apiStatus.SUCCESS,
             message: "search successfully",

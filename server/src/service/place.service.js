@@ -52,4 +52,8 @@ PlaceService.updateCurrentPossion = async (lng, lat) => {
     }, {new: true});
     return place;
 }
+PlaceService.getCurrentPosition = async () => {
+    const currentPlace = await Place.findOne({id: "current-position"});
+    return currentPlace;
+}
 export default PlaceService;
